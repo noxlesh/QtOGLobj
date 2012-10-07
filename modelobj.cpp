@@ -28,19 +28,19 @@ void ModelObj::LoadMdl()
 
 void ModelObj::ParceV(QString line)
 {
-
-    //qDebug("Vertex line found");
-    //vertex3d tmpVtx;
+    float tmpArr[3];
     QString tmpStr;
     int sz = line.size();
-    for (int i=2;i<(sz-2);i++)
+    for (int i=2,si=0;i<(sz-2);i++,si++)
     {
         while((line.at(i)!=' ') && (line.at(i)!='\n')){
             tmpStr.append(line.at(i));
             i++;
         }
         qDebug(tmpStr.toLocal8Bit());
+        tmpArr[si] = tmpStr.toFloat();
         tmpStr.clear();
     }
+    vtxArr.push_back(&tmpArr);
 }
 

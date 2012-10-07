@@ -4,12 +4,6 @@
 #include <QtCore>
 #include <QFile>
 
-struct vertex3d{
-    float x;
-    float y;
-    float z;
-};
-
 class ModelObj
 {
 public:
@@ -18,7 +12,7 @@ public:
 private:
     int * vertices;
     QFile objFile;
-    std::vector<vertex3d> vtxArr;
+    std::vector<float(*)[3]> vtxArr;
     void ParceV(QString line);
 };
 
