@@ -3,21 +3,24 @@
 
 #include <QtCore>
 #include <QFile>
+
 struct vertex{
     float x;
     float y;
     float z;
 };
+typedef std::vector<vertex> vtxArray;
 
 class ModelObj
 {
 public:
     ModelObj();
-    void LoadMdl();
+    void LoadMdl();//Load model file
+    vtxArray GetVertices();//Get model vertices
 private:
     int * vertices;
     QFile objFile;
-    std::vector<vertex> vtxArr;
+    vtxArray vtxArr;
     void ParceV(QString line);
 };
 

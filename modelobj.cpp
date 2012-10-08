@@ -26,6 +26,19 @@ void ModelObj::LoadMdl()
     }
 }
 
+vtxArray ModelObj::GetVertices()
+{
+    //Check for vtxArr consistency
+    if(vtxArr.capacity() == 0) {
+        qDebug("Vertex array is empty:");
+        if(!objFile.isOpen())
+            qDebug("Model file not loaded!");
+        else
+            qDebug("Something goes wrong!");
+    }
+    return vtxArr;//All goes right
+}
+
 void ModelObj::ParceV(QString line)
 {
     vertex tmpVtx;
@@ -55,7 +68,7 @@ void ModelObj::ParceV(QString line)
         i++;
     }
     qDebug(tmpStr.toLocal8Bit());
-    tmpVtx.y = tmpStr.toFloat();
+    tmpVtx.z = tmpStr.toFloat();
     tmpStr.clear();
     //for z axis
     //adding vertex to vertex array

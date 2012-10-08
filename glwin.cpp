@@ -4,15 +4,6 @@ GLWin::GLWin(QWidget *parent)
     : QGLWidget(parent)
 {
     resize(400,300);
-    v1[0]= 1;
-    v1[1]= 0;
-    v1[2]= 0;
-    v2[0]= 0;
-    v2[1]= 1;
-    v2[2]= 0;
-    v3[0]= 0;
-    v3[1]= 0;
-    v3[2]= 0;
     cube.LoadMdl();
 }
 GLWin::~GLWin()
@@ -32,11 +23,23 @@ void GLWin::resizeGL(int w, int h)
 void GLWin::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    paintMdl();
+}
+
+void GLWin::paintMdl()
+{
+    vertex v1 = cube.GetVertices().at(0);
+    vertex v2 = cube.GetVertices().at(1);
+    vertex v3 = cube.GetVertices().at(2);
+    qDebug("-------");
+    qDebug(QString::number(v1.x).toLocal8Bit());
+    qDebug(QString::number(v1.y).toLocal8Bit());
+    qDebug(QString::number(v1.z).toLocal8Bit());
     glBegin(GL_TRIANGLES);
     glColor3f(1, 0, 0);     // set vertex color to red
-    glVertex3fv(v1);        // draw a triangle with v1, v2, v3
-    glVertex3fv(v2);
-    glVertex3fv(v3);
+    glVertex3f(v1.x,v1.y,v1.z);
+    glVertex3f(v2.x,v2.y,v2.z);
+    glVertex3f(v3.x,v3.y,v3.z);
     glEnd();
 }
 

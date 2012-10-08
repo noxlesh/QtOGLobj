@@ -18,10 +18,9 @@ private:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
-    GLfloat v1[3];
-    GLfloat v2[3];
-    GLfloat v3[3];
+    void paintMdl();
     ModelObj cube;
+    vtxArray vtxArr;
 };
 
 #endif // GLWIN_H
