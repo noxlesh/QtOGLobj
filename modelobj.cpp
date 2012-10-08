@@ -7,12 +7,12 @@ ModelObj::ModelObj()
 
 void ModelObj::LoadMdl()
 {
-    if(!objFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+    if(!objFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         //Error loading file
         qDebug("Loading obj model failed");
         return;
     }
-    while(!objFile.atEnd()){
+    while(!objFile.atEnd()) {
         QByteArray line = objFile.readLine();
         switch(line.at(0))
         {
@@ -28,19 +28,37 @@ void ModelObj::LoadMdl()
 
 void ModelObj::ParceV(QString line)
 {
-    float tmpArr[3];
+    vertex tmpVtx;
+    int i = 2;//
     QString tmpStr;
-    int sz = line.size();
-    for (int i=2,si=0;i<(sz-2);i++,si++)
-    {
-        while((line.at(i)!=' ') && (line.at(i)!='\n')){
-            tmpStr.append(line.at(i));
-            i++;
-        }
-        qDebug(tmpStr.toLocal8Bit());
-        tmpArr[si] = tmpStr.toFloat();
-        tmpStr.clear();
+    //fox x axis
+    while(line.at(i)!=' ') {
+        tmpStr.append(line.at(i));
+        i++;
     }
-    vtxArr.push_back(&tmpArr);
+    qDebug(tmpStr.toLocal8Bit());
+    tmpVtx.x = tmpStr.toFloat();
+    tmpStr.clear();
+    i++;
+    //for y axis
+    while(line.at(i)!=' ') {
+        tmpStr.append(line.at(i));
+        i++;
+    }
+    qDebug(tmpStr.toLocal8Bit());
+    tmpVtx.y = tmpStr.toFloat();
+    tmpStr.clear();
+    i++;
+    //for z axis
+    while(line.at(i)!='\n') {
+        tmpStr.append(line.at(i));
+        i++;
+    }
+    qDebug(tmpStr.toLocal8Bit());
+    tmpVtx.y = tmpStr.toFloat();
+    tmpStr.clear();
+    //for z axis
+    //adding vertex to vertex array
+    vtxArr.push_back(tmpVtx);
 }
 
