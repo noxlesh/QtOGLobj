@@ -3,6 +3,9 @@
 ModelObj::ModelObj()
 {
     objFile.setFileName("cube.obj");
+    #ifdef Q_OS_LINUX
+    setlocale(LC_NUMERIC, "C");
+    #endif
 }
 
 void ModelObj::LoadMdl()
@@ -22,6 +25,9 @@ void ModelObj::LoadMdl()
         case 'v':
             ParceV(line);
             break;
+        case 'f':
+            ParceF(line);
+            break;
         }
     }
 }
@@ -39,39 +45,22 @@ vtxArray ModelObj::GetVertices()
     return vtxArr;//All goes right
 }
 
-void ModelObj::ParceV(QString line)
+faceArray ModelObj::GetFaces()
+{
+    return fArr;
+}
+
+void ModelObj::ParceV(QByteArray line)
 {
     vertex tmpVtx;
-    int i = 2;//
-    QString tmpStr;
-    //fox x axis
-    while(line.at(i)!=' ') {
-        tmpStr.append(line.at(i));
-        i++;
-    }
-    qDebug(tmpStr.toLocal8Bit());
-    tmpVtx.x = tmpStr.toFloat();
-    tmpStr.clear();
-    i++;
-    //for y axis
-    while(line.at(i)!=' ') {
-        tmpStr.append(line.at(i));
-        i++;
-    }
-    qDebug(tmpStr.toLocal8Bit());
-    tmpVtx.y = tmpStr.toFloat();
-    tmpStr.clear();
-    i++;
-    //for z axis
-    while(line.at(i)!='\n') {
-        tmpStr.append(line.at(i));
-        i++;
-    }
-    qDebug(tmpStr.toLocal8Bit());
-    tmpVtx.z = tmpStr.toFloat();
-    tmpStr.clear();
-    //for z axis
-    //adding vertex to vertex array
+    sscanf(line.data(),"v %f %f %f",&tmpVtx.x,&tmpVtx.y,&tmpVtx.z);
     vtxArr.push_back(tmpVtx);
+}
+
+void ModelObj::ParceF(QByteArray line)
+{
+    face tmpFace;
+    sscanf(line.data(),"f %d %d %d",&tmpFace.x,&tmpFace.y,&tmpFace.z);
+    fArr.push_back(tmpFace);
 }
 

@@ -19,6 +19,10 @@ void GLWin::resizeGL(int w, int h)
     glLoadIdentity();
     int h1 = w*(16/10);
     glViewport(0, 0, (GLint)w, (GLint)h1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0,0,2);
+
 }
 void GLWin::paintGL()
 {
@@ -28,18 +32,18 @@ void GLWin::paintGL()
 
 void GLWin::paintMdl()
 {
-    vertex v1 = cube.GetVertices().at(0);
-    vertex v2 = cube.GetVertices().at(1);
-    vertex v3 = cube.GetVertices().at(2);
-    qDebug("-------");
-    qDebug(QString::number(v1.x).toLocal8Bit());
-    qDebug(QString::number(v1.y).toLocal8Bit());
-    qDebug(QString::number(v1.z).toLocal8Bit());
-    glBegin(GL_TRIANGLES);
-    glColor3f(1, 0, 0);     // set vertex color to red
-    glVertex3f(v1.x,v1.y,v1.z);
-    glVertex3f(v2.x,v2.y,v2.z);
-    glVertex3f(v3.x,v3.y,v3.z);
-    glEnd();
+
+    for(int i=0;i<(cube.GetFaces().size());i++) {
+        face curFace = cube.GetFaces().at(i);
+        vertex v1 = cube.GetVertices().at((curFace.x-1));
+        vertex v2 = cube.GetVertices().at((curFace.y-1));
+        vertex v3 = cube.GetVertices().at((curFace.z-1));
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 0, 0);     // set vertex color to red
+        glVertex3f(v1.x,v1.y,v1.z);
+        glVertex3f(v2.x,v2.y,v2.z);
+        glVertex3f(v3.x,v3.y,v3.z);
+        glEnd();
+    }
 }
 
