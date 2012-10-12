@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QGLWidget>
 #include <QtOpenGL>
+#include <QTimer>
 #include <vector>
 #include  "modelobj.h"
 
@@ -21,6 +22,8 @@ private:
     void paintMdl();
     ModelObj cube;
     vtxArray vtxArr;
+    QTimer *timer;
+    ushort iRot;
 };
 
 #endif // GLWIN_H
