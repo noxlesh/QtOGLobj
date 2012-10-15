@@ -24,6 +24,7 @@ private:
     vtxArray vtxArr;
     QTimer *timer;
     ushort iRot;
+    GLuint idx;
 };
 
 #endif // GLWIN_H
