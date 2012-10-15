@@ -19,9 +19,6 @@ void ModelObj::LoadMdl()
         QByteArray line = objFile.readLine();
         switch(line.at(0))
         {
-        case '#':
-            //qDebug("Line ignored:found comment");
-            break;
         case 'v':
             ParceV(line);
             break;

@@ -1,6 +1,5 @@
 #ifndef MODELOBJ_H
 #define MODELOBJ_H
-
 #include <QtCore>
 #include <QFile>
 
@@ -33,5 +32,4 @@ private:
     void ParceV(QByteArray line);
     void ParceF(QByteArray line);
 };
-
 #endif // MODELOBJ_H
