@@ -26,6 +26,7 @@ private:
     QTimer *timer;
     ushort iRot;
     GLuint idx;
+    GLfloat xTra, yTra, zTra;
 
 };
 

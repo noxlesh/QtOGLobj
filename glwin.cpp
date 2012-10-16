@@ -3,7 +3,7 @@
 GLWin::GLWin(QWidget *parent)
     : QGLWidget(parent)
 {
-    iRot = 1;
+    xTra, yTra, zTra, iRot = 0;
     resize(400,300);//window size
     cube.LoadMdl();
     idx = 0;
@@ -21,53 +21,61 @@ void GLWin::initializeGL()
     idx = paintMdl();
     glClearDepth( 1.0f );
     glEnable(GL_DEPTH_TEST);
-    glEnable (GL_LIGHTING); //enable the lighting
-    glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
+    //glEnable (GL_LIGHTING); //enable the lighting
+    //glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
     glDepthFunc( GL_LEQUAL );
-    glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_SMOOTH);
     glEnable(GL_CULL_FACE);
 }
 void GLWin::resizeGL(int nWidth, int nHeight)
-{
+{   float ratio = nWidth/nHeight;
     glViewport(0, 0, (GLint)nWidth, (GLint)nHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum (-1, 1, -1, 1, 1, 40);
-    glTranslatef(0.0, 0.0, -10.0);
+    if (nWidth>=nHeight)
+          glFrustum(-5.0*ratio, 5.0*ratio, -5.0, 5.0, 1.0, 7.0);
+       else
+          glFrustum(-5.0, 5.0, -5.0/ratio, 5.0/ratio, 1.0, 7.0);
+
+       glViewport(0, 0, (GLint)nWidth, (GLint)nHeight);
+    //glTranslatef(0.0, 0.0, -2.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 void GLWin::paintGL()
 {
+    glLoadIdentity();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //iRot++;
-    glRotatef(iRot, -1.0, 0.0, 0.0);
+    glTranslatef(xTra, yTra, zTra);
+    glRotatef(iRot, 0.0, 1.0, 0.0);
     glCallList(idx);
-    //timer->start(10);
 }
 
 void GLWin::keyPressEvent(QKeyEvent *ke)
 {
     switch (ke->key())
-        {
-              case Qt::Key_Space:
-                    if(iRot)
-                        iRot = 0;
-                    else
-                        iRot = 1;
-                    break;
-              case Qt::Key_Up:
-                    glTranslatef(0.0, 0.0, -1.0);
-                    break;
-              case Qt::Key_Down:
-                    glTranslatef(0.0, 0.0, 1.0);
-                    break;
-              case Qt::Key_Left:
-                    glTranslatef(-0.1, 0.0, 0.0);
-                    break;
-              case Qt::Key_Right:
-                    glTranslatef(0.1, 0.0, 0.0);
-                    break;
+    {
+    case Qt::Key_Space:
+        iRot=iRot+1;
+        break;
+    case Qt::Key_Up:
+        yTra=yTra-0.1;
+        break;
+    case Qt::Key_Down:
+        yTra=yTra+0.1;
+        break;
+    case Qt::Key_Left:
+        xTra=xTra-0.1;
+        break;
+    case Qt::Key_Right:
+        xTra=xTra+0.1;
+        break;
+    case Qt::Key_Comma:
+        zTra=zTra-0.1;
+        break;
+    case Qt::Key_Period:
+        zTra=zTra+0.1;
+        break;
     }
 }
 
