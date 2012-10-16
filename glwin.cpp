@@ -4,12 +4,12 @@ GLWin::GLWin(QWidget *parent)
     : QGLWidget(parent)
 {
     iRot = 1;
-    resize(400,300);
+    resize(400,300);//window size
     cube.LoadMdl();
-    idx = glGenLists(1);
+    idx = 0;
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateGL()));
-            timer->start(500);
+    timer->start(20);//50 fps
 }
 GLWin::~GLWin()
 {
@@ -18,57 +18,82 @@ GLWin::~GLWin()
 void GLWin::initializeGL()
 {
     qglClearColor(Qt::white);
+    idx = paintMdl();
     glClearDepth( 1.0f );
     glEnable(GL_DEPTH_TEST);
     glEnable (GL_LIGHTING); //enable the lighting
-        glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
+    glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
     glDepthFunc( GL_LEQUAL );
-    glShadeModel(GL_FLAT);
-    //glEnable(GL_CULL_FACE);
-    paintMdl();
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_CULL_FACE);
 }
 void GLWin::resizeGL(int nWidth, int nHeight)
 {
-    //GLfloat ratio=(GLfloat)nHeight/(GLfloat)nWidth;
     glViewport(0, 0, (GLint)nWidth, (GLint)nHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum (-1, 1, -1, 1, 3, 10);
-    glTranslatef(0.0, 0.0, -7.0);
+    glFrustum (-1, 1, -1, 1, 1, 40);
+    glTranslatef(0.0, 0.0, -10.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 void GLWin::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //iRot++;
-    //glRotatef(iRot, 1.0, 0.0, 0.0);
-    glColor3f(1, 0, 0);// set vertex color to red
+    glRotatef(iRot, -1.0, 0.0, 0.0);
     glCallList(idx);
-    //timer->start(5);
+    //timer->start(10);
 }
-void GLWin::paintMdl()
+
+void GLWin::keyPressEvent(QKeyEvent *ke)
 {
-    glNewList(idx, GL_COMPILE);
+    switch (ke->key())
+        {
+              case Qt::Key_Space:
+                    if(iRot)
+                        iRot = 0;
+                    else
+                        iRot = 1;
+                    break;
+              case Qt::Key_Up:
+                    glTranslatef(0.0, 0.0, -1.0);
+                    break;
+              case Qt::Key_Down:
+                    glTranslatef(0.0, 0.0, 1.0);
+                    break;
+              case Qt::Key_Left:
+                    glTranslatef(-0.1, 0.0, 0.0);
+                    break;
+              case Qt::Key_Right:
+                    glTranslatef(0.1, 0.0, 0.0);
+                    break;
+    }
+}
+
+GLuint GLWin::paintMdl()
+{
+    GLuint list;
+    list = glGenLists(1);
+    glNewList(list, GL_COMPILE);
+    qglColor(Qt::red);
     glBegin(GL_TRIANGLES);
-//    faceArray faces = cube.GetFaces();
-//    uint facesNum = faces.size();
-//    vtxArray vetices = cube.GetVertices();
+    faceArray faces = cube.GetFaces();
+    uint facesNum = faces.size();
+    vtxArray vetices = cube.GetVertices();
 
-//    for(uint i=0;i<facesNum;i++) {
-//        face curFace = faces.at(i);
-//        vertex v1 = vetices.at((curFace.x-1));
-//        vertex v2 = vetices.at((curFace.y-1));
-//        vertex v3 = vetices.at((curFace.z-1));
-//        glVertex3f(v1.x, v1.y, v1.z);
-//        glVertex3f(v2.x, v2.y, v2.z);
-//        glVertex3f(v3.x, v3.y, v3.z);
-//    }
+    for(uint i=0;i<facesNum;i++) {
+        face curFace = faces.at(i);
+        vertex v1 = vetices.at((curFace.x-1));
+        vertex v2 = vetices.at((curFace.y-1));
+        vertex v3 = vetices.at((curFace.z-1));
+        glVertex3f(v1.x, v1.y, v1.z);
+        glVertex3f(v2.x, v2.y, v2.z);
+        glVertex3f(v3.x, v3.y, v3.z);
+    }
 
-    glVertex3f(-0.5, 0 ,0);
-    glVertex3f(0, 0.5, 0);
-    glVertex3f(0.5, 0, 0);
     glEnd();
     glEndList();
+    return list;
 }
 

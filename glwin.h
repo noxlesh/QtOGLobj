@@ -19,12 +19,14 @@ private:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
-    void paintMdl();
+    void keyPressEvent(QKeyEvent *ke);
+    GLuint paintMdl();
     ModelObj cube;
     vtxArray vtxArr;
     QTimer *timer;
     ushort iRot;
     GLuint idx;
+
 };
 
 #endif // GLWIN_H
