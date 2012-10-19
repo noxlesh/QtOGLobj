@@ -1,11 +1,24 @@
 #include "modelobj.h"
-
-ModelObj::ModelObj()
+// Loads model from file
+ModelObj::ModelObj(QString file)
 {
-    objFile.setFileName("cube.obj");
+    objFile.setFileName(file);
     #ifdef Q_OS_LINUX
     setlocale(LC_NUMERIC, "C");
     #endif
+    LoadMdl();
+}
+// Just set numeric locale to C standart
+ModelObj::ModelObj()
+{
+    #ifdef Q_OS_LINUX
+    setlocale(LC_NUMERIC, "C");
+    #endif
+}
+
+ModelObj::~ModelObj()
+{
+    objFile.close();
 }
 
 void ModelObj::LoadMdl()

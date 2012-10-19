@@ -20,7 +20,9 @@ typedef std::vector<face> faceArray;
 class ModelObj
 {
 public:
+    ModelObj(QString file);
     ModelObj();
+    ~ModelObj();
     void LoadMdl();//Load model file
     vtxArray GetVertices();//Get model vertices
     faceArray GetFaces();//Get model faces

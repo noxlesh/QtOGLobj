@@ -4,7 +4,9 @@
 #include <QtGui>
 #include <QGLWidget>
 #include <QtOpenGL>
+//#include <GL/glu.h>
 #include <QTimer>
+#include <math.h>
 #include <vector>
 #include  "modelobj.h"
 
@@ -21,12 +23,15 @@ private:
     void paintGL();
     void keyPressEvent(QKeyEvent *ke);
     GLuint paintMdl();
-    ModelObj cube;
+    ModelObj *cube;
     vtxArray vtxArr;
     QTimer *timer;
     ushort iRot;
     GLuint idx;
     GLfloat xTra, yTra, zTra;
+    GLuint fov;
+    GLdouble zN;
+    GLdouble zF;
 
 };
 
