@@ -32,7 +32,10 @@ private:
     GLuint fov;
     GLdouble zN;
     GLdouble zF;
-
+    GLboolean shadingMode;
+    GLfloat LightAmbient[4];
+    GLfloat LightDiffuse[4];
+    GLfloat LightPosition[4];
 };
 
 #endif // GLWIN_H

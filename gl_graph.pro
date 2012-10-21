@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui opengl
-LIBS += -lGLU
 TARGET = gl_graph
 TEMPLATE = app
 

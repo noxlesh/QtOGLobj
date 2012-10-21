@@ -7,10 +7,24 @@ GLWin::GLWin(QWidget *parent)
     yTra = 0;
     zTra = 0;
     iRot = 0;
-
+    shadingMode = true;//true is SMOOTH
     fov = 45;// Field of view in degrees
     zN = 5;  //near Z near
     zF = 100;// Z far
+    LightAmbient[0] = 1.0f;
+    LightAmbient[1] = 1.0f;
+    LightAmbient[2] = 1.0f;
+    LightAmbient[0] = 1.0f;
+
+    LightDiffuse[0] = 1.0f;
+    LightDiffuse[1] = 1.0f;
+    LightDiffuse[2] = 1.0f;
+    LightDiffuse[3] = 1.0f;
+
+    LightPosition[0] = 0.0f;
+    LightPosition[1] = 0.0f;
+    LightPosition[2] = 2.0f;
+    LightPosition[3] = 1.0f;
 
     resize(400,300);//window size
 
@@ -29,14 +43,20 @@ GLWin::~GLWin()
 }
 void GLWin::initializeGL()
 {
-    qglClearColor(Qt::white);
+    qglClearColor(Qt::black);
     idx = paintMdl();
-    glClearDepth( 1.0f );
+    //glClearDepth( 1.0f );
     glEnable(GL_DEPTH_TEST);
-    //glEnable (GL_LIGHTING); //enable the lighting
-    //glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
     glDepthFunc( GL_LEQUAL );
-    //glShadeModel(GL_SMOOTH);
+    glEnable (GL_LIGHTING); //enable the lighting
+    glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+    glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.2);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.4);
+    glEnable(GL_LIGHT0);
+    glShadeModel(GL_FLAT);
     glEnable(GL_CULL_FACE);
 }
 void GLWin::resizeGL(int nWidth, int nHeight)
@@ -49,12 +69,8 @@ void GLWin::resizeGL(int nWidth, int nHeight)
     glViewport(0, 0, (GLint)nWidth, (GLint)nHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-//    if (nWidth>=nHeight)
-          glFrustum(l, r, b, t, zN, zF);
-//       else
-//          glFrustum(-5.0, 5.0, -5.0/ratio, 5.0/ratio, 1.0, 7.0);
-    //gluPerspective(90,ratio,1.0,100.0);
-    glTranslatef(0.0, -2.0, -20.0);
+    glFrustum(l, r, b, t, zN, zF);
+    glTranslatef(0.0, 0.0, -20.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -70,6 +86,16 @@ void GLWin::keyPressEvent(QKeyEvent *ke)
 {
     switch (ke->key())
     {
+    case Qt::Key_S:
+        if(shadingMode) {
+            glEnable (GL_LIGHTING);
+            shadingMode = false;
+        }
+        else {
+            glDisable(GL_LIGHTING);
+            shadingMode = true;
+        }
+        break;
     case Qt::Key_Space:
         iRot=iRot+1;
         break;
@@ -110,6 +136,8 @@ GLuint GLWin::paintMdl()
         vertex v1 = vetices.at((curFace.x-1));
         vertex v2 = vetices.at((curFace.y-1));
         vertex v3 = vetices.at((curFace.z-1));
+        //calculating normal
+        glNormal3f(((v2.y-v1.y)*(v3.z-v1.z))-((v3.y-v1.y)*(v2.z-v1.z)), ((v2.x-v1.x)*(v3.z-v1.z))-((v3.x-v1.x)*(v2.z-v1.z)), ((v2.x-v1.x)*(v3.y-v1.y))-((v3.x-v1.x)*(v2.y-v1.y)));
         glVertex3f(v1.x, v1.y, v1.z);
         glVertex3f(v2.x, v2.y, v2.z);
         glVertex3f(v3.x, v3.y, v3.z);
