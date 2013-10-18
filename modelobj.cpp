@@ -52,7 +52,7 @@ vtxArray ModelObj::GetVertices()
         else
             qDebug("Something goes wrong!");
     }
-    return vtxArr;//All goes right
+    return vtxArr;
 }
 
 faceArray ModelObj::GetFaces()
